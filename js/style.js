@@ -1,1 +1,1 @@
-window.Calcularadora = new Calculers();
+window.Calculadora = new Calculers();
