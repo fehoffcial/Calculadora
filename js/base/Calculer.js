@@ -1,11 +1,11 @@
-class Calculers{
+class Cal{
     constructor(){
         this._display = document.getElementById("display");
         this._hours = document.getElementById("hora");
         this._dates = document.getElementById("data");
         this._locale = "pt-BR";
         this.initConfigDate();
-        this.initConfigButton()
+        this.initConfigButton();
     }
     /* Config Date Display */
    initConfigDate(){
@@ -14,6 +14,24 @@ class Calculers{
             this.datesSet = this.timeGet.toLocaleDateString(this._locale);
         },1000);
     }
+    /* CONFIG BUTTON */
+    initConfigBtn(element,events,functions){
+        events.split(" ").forEach(event=>{
+            element.addEventListener(event,functions, false);
+        });
+    }
+    initConfigButton(){
+        let button = document.querySelectorAll("#buttons > g, #parts > g")
+        button.forEach((values, index)=>{
+            this.initConfigBtn(values,"click drag",value=>{
+                console.log(values.className.baseVal.replace("btn-",""));
+            });
+            this.initConfigBtn(values,"mouseover mouseup mousedown", value =>{
+                values.style.cursor = "pointer";
+            })
+        });
+    }
+
     /* Display Get Date */
     get displayGet(){
         return this._display.innerHTML;
@@ -41,11 +59,6 @@ class Calculers{
         this._dateGet = value
     }
     /* -------- END ------- */
-    /* CONFIG BUTTON */
-    initConfigButton(){
-    
-    }
-
 
 
 
