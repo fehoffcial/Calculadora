@@ -3,15 +3,15 @@ class Calculers{
         this._display = document.getElementById("display");
         this._hours = document.getElementById("hora");
         this._dates = document.getElementById("data");
-        this.initConfigDate();
+        this._locale = "pt-BR";
+        this.initValueConfigDate();
     }
-   initConfigDate(){
-    /* Config Display */    
-    this._display.innerHTML = "10";
-    /* Config Hours */
-    this._hours.innerHTML = "19:29";
-    /* Config Date */
-    this._dates.innerHTML = "10/10/2023"
+   initValueConfigDate(){
+        setInterval(()=>{
+            this.hoursSet = this.timeGet.toLocaleTimeString(this._locale);
+            this.datesSet = this.timeGet.toLocaleDateString(this._locale);
+        },1000);
+    
     }
     /* Display Get Date */
     get displayGet(){
@@ -23,6 +23,9 @@ class Calculers{
     get datesGet(){
         return this._dates.innerHTML;
     } 
+    get timeGet(){
+        return new Date();
+    }
     /* Display SET Date */
     set displaySet(value){
         this._display.innerHTML = value;
@@ -31,6 +34,9 @@ class Calculers{
         this._hours.innerHTML = value;
     }
     set datesSet(value){
-        this._hours.innerHTML = value;
+        this._dates.innerHTML = value;
+    }
+    set timeSet(value){
+        this._dateGet = value
     }
 }
