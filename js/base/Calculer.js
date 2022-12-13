@@ -4,14 +4,15 @@ class Calculers{
         this._hours = document.getElementById("hora");
         this._dates = document.getElementById("data");
         this._locale = "pt-BR";
-        this.initValueConfigDate();
+        this.initConfigDate();
+        this.initConfigButton()
     }
-   initValueConfigDate(){
+    /* Config Date Display */
+   initConfigDate(){
         setInterval(()=>{
             this.hoursSet = this.timeGet.toLocaleTimeString(this._locale);
             this.datesSet = this.timeGet.toLocaleDateString(this._locale);
         },1000);
-    
     }
     /* Display Get Date */
     get displayGet(){
@@ -39,4 +40,29 @@ class Calculers{
     set timeSet(value){
         this._dateGet = value
     }
+    /* -------- END ------- */
+    /* CONFIG BUTTON */
+    initConfigButton(){
+    
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
