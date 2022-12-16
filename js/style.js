@@ -1,1 +1,1 @@
-window.Calculadora = new Cal();
+window.Call= new Cal();

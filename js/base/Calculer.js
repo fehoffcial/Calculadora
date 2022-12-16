@@ -1,26 +1,30 @@
 class Cal{
     constructor(){
-        this._saveoperation = [];
+        this._lastOperation = "";
+        this._lastNumber = "";
+        this._operationSave = [];
         this._display = document.getElementById("display");
         this._hours = document.getElementById("hora");
         this._dates = document.getElementById("data");
         this._locale = "pt-BR";
-        this.initConfigDate();
+        this.initalize();
         this.initConfigButton();
     }
     /* Config Date Display */
-   initConfigDate(){
+    initalize(){
         setInterval(()=>{
             this.hoursSet = this.timeGet.toLocaleTimeString(this._locale);
             this.datesSet = this.timeGet.toLocaleDateString(this._locale);
         },1000);
+        this.inputLastDisplay();
     }
     /* CONFIG  SWITCH BUTTON */
     btnAC(){
-
+        this._operationSave = [];
+        this.clearDisplay();
     }
     btnCE(){
-
+        this._operationSave.pop();
     }
     btnPCT(){
 
@@ -43,39 +47,94 @@ class Cal{
     btnPTN(){
 
     }
-    defaultErro(){
+    defaults(){
+        this.displaySet = "ERROR";
+    }
+    isOperation(value){
+        return (['+','-','*','%',"/"].indexOf(value) > -1)
+    }
+    setPush(value){
+        this._operationSave.push(value);
+        if(this._operationSave.length > 3){
+            this.calc();
+        }
+    }
+    getResult(){
+        return CalcResult = eval(this._operationSave.join(""));
 
     }
-    /* CONFIG NUMBER SWITCH */
-    btn0(){
+    calc(){
+        let lastPop = "";
+        this._lastOperation = this.getLastItem();
+        if(this._operationSave.length >3){
+            lastPop = this._operationSave.pop();
+            this._lastNumber = this.getResult();
+        }
+        if (this._operationSave.length == 3){
+            this._lastNumber = this.getLastItem(false);
+            }
+        let CalcResult = this.getResult();
+        if(lastPop=="%"){
+            CalcResult /= 100;
+            this._operationSave = [CalcResult];
+
+        }else{
+            this._operationSave = [CalcResult];
+            if(lastPop) this._operationSave.push(lastPop)
+        }
+            this.inputLastDisplay();
 
     }
-    btn1(){
-
+    setLastOperation(value){
+        this._operationSave[this._operationSave.length-1] = value;
     }
-    btn2(){
-
+    operation(value){
+        if(isNaN(this.getlast())){
+            // String
+            if(this.isOperation(value)){
+                this.setLastOperation(value);
+            }else if(isNaN(value)){
+                console.log("It is Number",value)
+            }else{
+                this.setPush(value);
+                this.inputLastDisplay()
+            }
+        }else{
+            if(this.isOperation(value)){
+                this.setPush(value);
+            }else{
+            // Number
+            let newValue = this.getlast().toString() + value.toString();
+            this.setLastOperation(parseInt(newValue));
+            // Update Display
+            this.inputLastDisplay();
+            }
+        }
+        // DEBUG CONSOLE.LOG
+        console.log("This is Number",value,isNaN(this.getlast()));
+        console.log(this._operationSave);
     }
-    btn3(){
-
+    getLastItem(isOperation = true){
+        let lastitem;
+        for(let lengths = this._operationSave.length-1; lengths >=0; lengths--){
+            if(this.isOperation(this.operation[lengths]) == isOperation){
+                lastitem = this._operationSave[lengths];
+                break;
+            }
+        }
+        return lastitem;
     }
-    btn4(){
-
+    inputLastDisplay(){ 
+        let lastNumber = this.getLastItem(false);       
+        if(!lastNumber) lastNumber = 0;
+        this.displaySet = lastNumber;
     }
-    btn5(){
-
+    clearDisplay(){
+        let lastNumber = 0;
+        this.displaySet = lastNumber;
     }
-    btn6(){
-
-    }
-    btn7(){
-
-    }
-    btn8(){
-
-    }
-    btn9(){
-
+    getlast(value){
+        return this._operationSave[this._operationSave.length-1];
     }
     initSwitch(value){
         switch(value){
@@ -87,59 +146,41 @@ class Cal{
                  this.btnCE();
                  break;
             case "porcento":
-                this.btnPCT();
+                this.operation('%');
                 break;
             case "divisao":
-                this.btnDVS();
+                this.operation('/');
                 break;
             case "multiplicacao":
-                this.btnMTL();
+                this.operation('*');
                 break;
             case "subtracao":
-                this.btnSTC();
+                this.operation('-');
                 break;
             case "soma":
-                this.btnSM();
+                this.operation('+');
                 break;
             case "igual":
-                this.btnIGL();
+                this.calc();
                 break;
             case "ponto":
-                this.btnPTN();
+                this.operation('.');
                 break;
             default:
-                this.defaultErro = "ERROR";
+                this.defaults();
                 break
             /* CONFIG SWITCH NUMBERS */
             case "0":
-                this.btn0();
-                break;
             case "1":
-                this.btn1();
-                break;
             case "2":
-                this.btn2();
-                break;
             case "3":
-                this.btn3();
-                break;
             case "4":
-                this.btn4();
-                break;
             case "5":
-                this.btn5();
-                break;
             case "6":
-                this.btn6();
-                break;
             case "7":
-                this.btn7();
-                break;
             case "8":
-                this.btn8();
-                break;
             case "9":
-                this.btn9();
+                this.operation(parseInt(value));
                 break;
         }
     }
@@ -153,8 +194,7 @@ class Cal{
         button.forEach((values, index)=>{
             this.initConfigBtn(values,"click drag",value=>{
                 let TextBtn = values.className.baseVal.replace("btn-","");
-                this.initSwitch(TextBtn)
-                console.log(TextBtn)
+                this.initSwitch(TextBtn);
             });
             this.initConfigBtn(values,"mouseover mouseup mousedown", value =>{
                 values.style.cursor = "pointer";
